@@ -1,0 +1,3 @@
+public enum Brush {
+    SCIANA, PRZEJSCIE, ODWROT, WEJSCIE, WYJSCIE, DEFAULT
+}

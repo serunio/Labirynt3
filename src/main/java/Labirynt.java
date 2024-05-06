@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static java.awt.Color.blue;
+import static java.awt.Color.orange;
 import static java.awt.Color.red;
 import static java.awt.Color.yellow;
 import static java.lang.Integer.MAX_VALUE;
@@ -22,7 +24,7 @@ public class Labirynt extends JPanel implements ActionListener {
 
     Labirynt(File file) throws IOException
     {
-        int size = 1000;
+        int size = 700;
         byte[] data = Files.readAllBytes(file.toPath());
         mazeSize = getSize(data);
         Komorka.rozmiar = size / (Math.max(mazeSize[0], mazeSize[1]));
@@ -105,14 +107,17 @@ public class Labirynt extends JPanel implements ActionListener {
         }
         return xy;
     }
-    Timer timer = new Timer(1, this);
-    Queue<Komorka> kolejka = new LinkedList<>();
+    Timer szukanie = new Timer(1, this);
+    Timer wynik = new Timer(0, this);
+    Queue<Komorka> kolejkaSzukanie = new LinkedList<>();
+    Queue<Komorka> kolejkaWynik = new LinkedList<>();
     void Astar() throws InterruptedException {
         int minWeight;
         x = start.x; y = start.y;
         maze[x][y].wagaDotarcia = 0;
         int result = 0;
 
+        szukanie.start();
         while (true) {
             if (x - 1 >= 0)
                 result += CheckAndConnectCell(x, y, x - 1, y);
@@ -126,8 +131,8 @@ public class Labirynt extends JPanel implements ActionListener {
                 break;
 
             maze[x][y].typ = Typ.ODWIEDZONA; //w tym miejscu zmienia sie kolor komorki
-            kolejka.add(maze[x][y]);
-            timer.start();
+
+
             //this.x = x; this.y = y;
 
             minWeight = MAX_VALUE / 2;
@@ -144,12 +149,13 @@ public class Labirynt extends JPanel implements ActionListener {
             }
             else return;
 
-            Main.frame.repaint();
-            this.repaint();
+            //Main.frame.repaint();
+            //this.repaint();
+            kolejkaSzukanie.add(maze[x][y]);
         }
         int temp;
         while (x != start.x || y != start.y) {
-            maze[x][y].ZmienTyp(Typ.ROZWIAZANIE);
+            kolejkaWynik.add(maze[x][y]);
             temp = maze[x][y].poprzednia.x;
             y = maze[x][y].poprzednia.y;
             x = temp;
@@ -169,7 +175,23 @@ public class Labirynt extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        kolejka.remove().setBackground(yellow);
-        timer.start();
+        if(e.getSource()==szukanie)
+        {
+            if(kolejkaSzukanie.size()>1)
+                kolejkaSzukanie.remove().setBackground(yellow);
+            if(!kolejkaSzukanie.isEmpty()){
+                kolejkaSzukanie.peek().setBackground(blue);
+                szukanie.start();
+            }
+            if(kolejkaSzukanie.size()==1)
+                wynik.start();
+            this.repaint();
+        }
+        else if(e.getSource()==wynik && !kolejkaWynik.isEmpty())
+        {
+            kolejkaWynik.remove().setBackground(orange);
+            wynik.start();
+        }
+
     }
 }

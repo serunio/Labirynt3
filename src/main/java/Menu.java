@@ -13,6 +13,7 @@ public class Menu extends JPanel implements ActionListener {
     JRadioButton sciana, przejscie, odwrot, start, stop;
     JButton saveButton, loadButton, solveButton;
     JFileChooser fileChooser = new JFileChooser();
+    JCheckBox animuj, pokazOdwiedzone;
     File file;
     JFrame frame;
 
@@ -20,7 +21,7 @@ public class Menu extends JPanel implements ActionListener {
         this.frame = frame;
         this.setBackground(blue);
         this.setLayout(new FlowLayout());
-        this.setPreferredSize(new Dimension(250, 100));
+        this.setPreferredSize(new Dimension(250, 150));
 
         sciana = new JRadioButton("sciana");
         przejscie = new JRadioButton("przejscie");
@@ -47,6 +48,18 @@ public class Menu extends JPanel implements ActionListener {
         this.add(start);
         this.add(stop);
 
+        animuj = new JCheckBox();
+        animuj.setText("Animuj");
+        animuj.setFocusable(false);
+        animuj.addActionListener(this);
+        this.add(animuj);
+
+        pokazOdwiedzone = new JCheckBox();
+        pokazOdwiedzone.setText("Pokaz odwiedzone");
+        pokazOdwiedzone.setFocusable(false);
+        pokazOdwiedzone.addActionListener(this);
+        this.add(pokazOdwiedzone);
+
         saveButton = new JButton();
         saveButton.setText("Zapisz");
         saveButton.addActionListener(this);
@@ -62,29 +75,29 @@ public class Menu extends JPanel implements ActionListener {
         solveButton.addActionListener(this);
         this.add(solveButton);
 
-        fileChooser.setCurrentDirectory(new File("."));
+        fileChooser.setCurrentDirectory(new File(".\\src\\main\\resources"));
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sciana)
-            Labirynt.brush = Brush.SCIANA;
+            Painter.brush = Brush.SCIANA;
         else if (e.getSource() == przejscie)
-            Labirynt.brush = Brush.PRZEJSCIE;
+            Painter.brush = Brush.PRZEJSCIE;
         else if (e.getSource() == odwrot)
-            Labirynt.brush = Brush.ODWROT;
+            Painter.brush = Brush.ODWROT;
         else if (e.getSource() == start)
-            Labirynt.brush = Brush.WEJSCIE;
+            Painter.brush = Brush.WEJSCIE;
         else if (e.getSource() == stop)
-            Labirynt.brush = Brush.WYJSCIE;
+            Painter.brush = Brush.WYJSCIE;
         else if (e.getSource() == saveButton && Main.labirynt != null) {
 
             int response = fileChooser.showSaveDialog(null);
             if (response == JFileChooser.APPROVE_OPTION) {
                 file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {
-                    Main.labirynt.SaveToFile(file);
+                    Main.labirynt.SaveToFileBinary(file);
 
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -96,23 +109,38 @@ public class Menu extends JPanel implements ActionListener {
             if (response == JFileChooser.APPROVE_OPTION) {
                 file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {
+                    Labirynt2 newLabirynt = new Labirynt2(file);
+                    if(!newLabirynt.created)
+                        return;
                     if(Main.labirynt != null)
                         frame.remove(Main.labirynt);
-                    Main.labirynt = new Labirynt(file);
+                    Main.labirynt = newLabirynt;
                     frame.add(Main.labirynt);
                     frame.pack();
-
-
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
         } else if (e.getSource() == solveButton) {
+            if(Main.labirynt == null || !Main.labirynt.created)
+            {
+                JOptionPane.showMessageDialog(null, "Najpierw stwórz labirynt");
+                return;
+            }
+
             try {
-                Main.labirynt.Astar();
+                Main.labirynt.searcher.Astar();
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
+        }
+        else if(e.getSource() == animuj)
+        {
+            AstarSearcher.animujIsTrue = animuj.isSelected();
+        }
+        else if(e.getSource() == pokazOdwiedzone)
+        {
+            AstarSearcher.showSzukanieIsTrue = pokazOdwiedzone.isSelected();
         }
     }
 }

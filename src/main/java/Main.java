@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Main {
-    static Labirynt labirynt;
+    static Labirynt2 labirynt;
     static JFrame frame;
     public static void main(String[] args) {
 

@@ -14,21 +14,20 @@ import static java.awt.Color.YELLOW;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.abs;
 
-public class Komorka extends JLabel implements MouseListener , ActionListener {
+public class Komorka extends JLabel implements MouseListener {
 
     static boolean isPressed;
     static int rozmiar;
     Typ typ;
     int x, y;
-    public int wagaDotarcia = MAX_VALUE/2;
+    public int wagaDotarcia = MAX_VALUE / 2;
     public Komorka poprzednia;
 
     Komorka(int x, int y, Typ typ) {
         this.typ = typ;
         ZmienPozycje(x, y);
 
-        switch (this.typ)
-        {
+        switch (this.typ) {
             case SCIANA, GRANICA -> this.setBackground(BLACK);
             case PRZEJSCIE -> this.setBackground(WHITE);
             case WEJSCIE -> this.setBackground(GREEN);
@@ -36,12 +35,11 @@ public class Komorka extends JLabel implements MouseListener , ActionListener {
             default -> this.setBackground(YELLOW);
         }
         this.setOpaque(true);
-        if(this.typ != Typ.WYJSCIE && this.typ != Typ.WEJSCIE)
+        if (this.typ != Typ.WYJSCIE && this.typ != Typ.WEJSCIE)
             this.addMouseListener(this);
     }
 
-    public void ZmienPozycje(int x, int y)
-    {
+    public void ZmienPozycje(int x, int y) {
         this.x = x;
         this.y = y;
         this.setBounds(x * rozmiar, y * rozmiar, rozmiar, rozmiar);
@@ -65,9 +63,8 @@ public class Komorka extends JLabel implements MouseListener , ActionListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if(isPressed)
-        {
-        Brush();
+        if (isPressed) {
+            Brush();
         }
     }
 
@@ -100,38 +97,19 @@ public class Komorka extends JLabel implements MouseListener , ActionListener {
         }
     }
 
-    void ZmienTyp(Typ typ)
-    {
+    void ZmienTyp(Typ typ) {
         this.typ = typ;
-            switch (typ)
-            {
-                case PRZEJSCIE -> this.setBackground(WHITE);
-                case SCIANA -> this.setBackground(BLACK);
-                case ODWIEDZONA -> this.setBackground(YELLOW);
-                case ROZWIAZANIE -> this.setBackground(ORANGE);
-            }
-            this.repaint();
-
-
+        switch (typ) {
+            case PRZEJSCIE -> this.setBackground(WHITE);
+            case SCIANA -> this.setBackground(BLACK);
+            case ODWIEDZONA -> this.setBackground(YELLOW);
+            case ROZWIAZANIE -> this.setBackground(ORANGE);
+        }
+        this.repaint();
+        Main.labirynt.repaint();
     }
 
-    int GetHeuristic(Komorka finalCell)
-    {
-        return abs(finalCell.x-this.x) + abs(finalCell.y-this.y);
-    }
-Color color = new Color(6821123);
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        color = new Color(111);
-        repaint();
-    }
-
-    public void paint(Graphics g)
-    {
-        super.paint(g);
-//        Graphics2D g2D = (Graphics2D)g;
-//        g2D.setPaint(color);
-//        g2D.fillRect(0, 0,Komorka.rozmiar,Komorka.rozmiar);
+    int GetHeuristic(Komorka finalCell) {
+        return abs(finalCell.x - this.x) + abs(finalCell.y - this.y);
     }
 }
-

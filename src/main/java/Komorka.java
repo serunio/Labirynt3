@@ -1,9 +1,4 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Color;
 
 import static java.awt.Color.BLACK;
 import static java.awt.Color.GREEN;
@@ -14,102 +9,44 @@ import static java.awt.Color.YELLOW;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Math.abs;
 
-public class Komorka extends JLabel implements MouseListener {
-
-    static boolean isPressed;
-    static int rozmiar;
+public class Komorka {
+    public static int rozmiar = 0;
+    public static boolean isZoomed = false;
     Typ typ;
+    Color kolor;
     int x, y;
     public int wagaDotarcia = MAX_VALUE / 2;
     public Komorka poprzednia;
 
-    Komorka(int x, int y, Typ typ) {
-        this.typ = typ;
-        ZmienPozycje(x, y);
+    Komorka(int x, int y, Typ typ)
+    {
+        ZmienTyp(typ);
+        this.x = x;
+        this.y = y;
+    }
 
-        switch (this.typ) {
-            case SCIANA, GRANICA -> this.setBackground(BLACK);
-            case PRZEJSCIE -> this.setBackground(WHITE);
-            case WEJSCIE -> this.setBackground(GREEN);
-            case WYJSCIE -> this.setBackground(RED);
-            default -> this.setBackground(YELLOW);
+    public void ZmienTyp(Typ typ)
+    {
+        this.typ = typ;
+        switch (typ) {
+            case PRZEJSCIE -> this.kolor = WHITE;
+            case SCIANA, GRANICA -> this.kolor = BLACK;
+            case ODWIEDZONA -> this.kolor = YELLOW;
+            case ROZWIAZANIE -> this.kolor = ORANGE;
+            case WEJSCIE -> this.kolor = GREEN;
+            case WYJSCIE -> this.kolor = RED;
         }
-        this.setOpaque(true);
-        if (this.typ != Typ.WYJSCIE && this.typ != Typ.WEJSCIE)
-            this.addMouseListener(this);
     }
 
     public void ZmienPozycje(int x, int y) {
+        if(x < 0 || y < 0 || x >= Labirynt.mazeSize[0] || y >= Labirynt.mazeSize[1])
+            return;
         this.x = x;
         this.y = y;
-        this.setBounds(x * rozmiar, y * rozmiar, rozmiar, rozmiar);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        isPressed = true;
-        Brush();
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        isPressed = false;
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        if (isPressed) {
-            Brush();
-        }
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    void Brush() {
-        switch (Labirynt.brush) {
-            case ODWROT -> {
-                if (this.typ == Typ.PRZEJSCIE) {
-                    ZmienTyp(Typ.SCIANA);
-                } else if (this.typ == Typ.SCIANA) {
-                    ZmienTyp(Typ.PRZEJSCIE);
-                }
-            }
-            case PRZEJSCIE -> {
-                if (this.typ != Typ.GRANICA) {
-                    ZmienTyp(Typ.PRZEJSCIE);
-                }
-            }
-            case SCIANA -> {
-                if (this.typ != Typ.GRANICA) {
-                    ZmienTyp(Typ.SCIANA);
-                }
-            }
-            case WEJSCIE -> Labirynt.start.ZmienPozycje(x, y);
-            case WYJSCIE -> Labirynt.stop.ZmienPozycje(x, y);
-        }
-    }
-
-    void ZmienTyp(Typ typ) {
-        this.typ = typ;
-        switch (typ) {
-            case PRZEJSCIE -> this.setBackground(WHITE);
-            case SCIANA -> this.setBackground(BLACK);
-            case ODWIEDZONA -> this.setBackground(YELLOW);
-            case ROZWIAZANIE -> this.setBackground(ORANGE);
-        }
-        this.repaint();
-        Main.labirynt.repaint();
     }
 
     int GetHeuristic(Komorka finalCell) {
-        return abs(finalCell.x - this.x) + abs(finalCell.y - this.y);
+        return (abs(finalCell.x - this.x) + abs(finalCell.y - this.y));
     }
+
 }

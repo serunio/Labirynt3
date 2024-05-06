@@ -4,25 +4,25 @@ import java.awt.event.MouseMotionListener;
 
 public class Painter implements MouseListener, MouseMotionListener {
 
-    Komorka2[][] maze;
+    Komorka[][] maze;
     int[] mazeSize;
-    Komorka2 start, stop;
-    Labirynt2 labirynt;
+    Komorka start, stop;
+    Labirynt labirynt;
     int lastX = -1, lastY = -1;
     public static Brush brush = Brush.DEFAULT;
-    Painter(Labirynt2 labirynt)
+    Painter(Labirynt labirynt)
     {
         this.labirynt = labirynt;
         maze = labirynt.maze;
-        mazeSize = Labirynt2.mazeSize;
-        start = Labirynt2.start;
-        stop = Labirynt2.stop;
+        mazeSize = Labirynt.mazeSize;
+        start = Labirynt.start;
+        stop = Labirynt.stop;
     }
     void Brush(int x , int y)
     {
         labirynt.searcher.Clear();
-        x /= Komorka2.rozmiar;
-        y /= Komorka2.rozmiar;
+        x /= Komorka.rozmiar;
+        y /= Komorka.rozmiar;
 
         if(x < 0 || y < 0 || x >= mazeSize[0] || y >= mazeSize[1])
             return;
@@ -45,8 +45,14 @@ public class Painter implements MouseListener, MouseMotionListener {
                     maze[x][y].ZmienTyp(Typ.SCIANA);
                 }
             }
-            case WEJSCIE -> start.ZmienPozycje(x, y);
-            case WYJSCIE -> stop.ZmienPozycje(x, y);
+            case WEJSCIE -> {
+                if(x!=stop.x || y!=stop.y)
+                    start.ZmienPozycje(x, y);
+            }
+            case WYJSCIE -> {
+                if(x!=start.x || y!=start.y)
+                    stop.ZmienPozycje(x, y);
+            }
         }
         labirynt.repaint();
     }
@@ -58,8 +64,8 @@ public class Painter implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         Brush(e.getX(), e.getY());
-        lastX = e.getX()/Komorka2.rozmiar;
-        lastY = e.getY()/Komorka2.rozmiar;
+        lastX = e.getX()/ Komorka.rozmiar;
+        lastY = e.getY()/ Komorka.rozmiar;
     }
 
     @Override
@@ -68,11 +74,11 @@ public class Painter implements MouseListener, MouseMotionListener {
     }
     @Override
     public void mouseDragged(MouseEvent e) {
-        if(lastX == e.getX()/Komorka2.rozmiar && lastY == e.getY()/Komorka2.rozmiar)
+        if(lastX == e.getX()/ Komorka.rozmiar && lastY == e.getY()/ Komorka.rozmiar)
             return;
         Brush(e.getX(), e.getY());
-        lastX = e.getX()/Komorka2.rozmiar;
-        lastY = e.getY()/Komorka2.rozmiar;
+        lastX = e.getX()/ Komorka.rozmiar;
+        lastY = e.getY()/ Komorka.rozmiar;
     }
 
     @Override

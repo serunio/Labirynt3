@@ -11,16 +11,16 @@ import static java.lang.Integer.MAX_VALUE;
 
 public class AstarSearcher implements ActionListener {
 
-    Komorka2[][] maze;
+    Komorka[][] maze;
     int[] mazeSize;
-    Komorka2 start, stop;
-    Labirynt2 labirynt;
-    AstarSearcher(Labirynt2 labirynt){
+    Komorka start, stop;
+    Labirynt labirynt;
+    AstarSearcher(Labirynt labirynt){
         this.labirynt = labirynt;
         maze = labirynt.maze;
-        mazeSize = Labirynt2.mazeSize;
-        start = Labirynt2.start;
-        stop = Labirynt2.stop;
+        mazeSize = Labirynt.mazeSize;
+        start = Labirynt.start;
+        stop = Labirynt.stop;
     }
     Timer animacjaSzukanie = new Timer(0, this);
     Timer animacjaWynik = new Timer(0, this);
@@ -29,9 +29,9 @@ public class AstarSearcher implements ActionListener {
     static boolean animujIsTrue = false;
     static boolean showSzukanieIsTrue = false;
     boolean animationIsRunning = false;
-    Queue<Komorka2> kolejkaSzukanie = new LinkedList<>();
-    Queue<Komorka2> kolejkaWynik = new LinkedList<>();
-    LinkedList<Komorka2> doPrzeszukania = new LinkedList<>();
+    Queue<Komorka> kolejkaSzukanie = new LinkedList<>();
+    Queue<Komorka> kolejkaWynik = new LinkedList<>();
+    LinkedList<Komorka> doPrzeszukania = new LinkedList<>();
 
     void Astar() throws InterruptedException {
         Clear();
@@ -60,7 +60,12 @@ public class AstarSearcher implements ActionListener {
             }
             doPrzeszukania.remove(maze[x][y]);
             if(doPrzeszukania.isEmpty())
+            {
+                JOptionPane.showMessageDialog(null, "Nie znaleziono rozwiązania");
+                Clear();
                 return;
+            }
+
 
             doPrzeszukania.sort((a, b) -> a.wagaDotarcia + a.GetHeuristic(stop) - b.wagaDotarcia - b.GetHeuristic(stop));
 
@@ -84,9 +89,9 @@ public class AstarSearcher implements ActionListener {
             }
 
             else {
-                LinkedList<Komorka2> tempQueue = new LinkedList<>(kolejkaWynik);
+                LinkedList<Komorka> tempQueue = new LinkedList<>(kolejkaWynik);
                 kolejkaWynik.clear();
-                tempQueue.descendingIterator().forEachRemaining(komorka2 -> kolejkaWynik.add(komorka2));
+                tempQueue.descendingIterator().forEachRemaining(komorka -> kolejkaWynik.add(komorka));
                 animacjaSzukanieIsFinished = true;
                 animacjaWynik.start();
             }

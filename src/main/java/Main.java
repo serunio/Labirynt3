@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Main {
-    static Labirynt2 labirynt;
+    static Labirynt labirynt;
     static JFrame frame;
     public static void main(String[] args) {
 
@@ -10,6 +10,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
+        //frame.setLocationRelativeTo(null);
 
         Menu menu = new Menu(frame);
         frame.add(menu, BorderLayout.EAST);
@@ -17,5 +18,6 @@ public class Main {
         frame.pack();
 
         frame.getContentPane().repaint();
+
     }
 }

@@ -200,6 +200,10 @@ public class Menu extends JPanel implements ActionListener {
             {
                 JOptionPane.showMessageDialog(null, "Najpierw stwórz labirynt");
             }
+            else
+            {
+                Main.labirynt.searcher.Astar();
+            }
 
         }
         else if(e.getSource() == generateButton){

@@ -33,7 +33,7 @@ public class AstarSearcher implements ActionListener {
     Queue<Komorka> kolejkaWynik = new LinkedList<>();
     LinkedList<Komorka> doPrzeszukania = new LinkedList<>();
 
-    void Astar() throws InterruptedException {
+    void Astar(){
         Clear();
         int x = start.x, y = start.y;
         int result = 0;

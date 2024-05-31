@@ -11,7 +11,7 @@ import static java.awt.Color.blue;
 
 public class Menu extends JPanel implements ActionListener {
     JRadioButton sciana, przejscie, odwrot, start, stop;
-    JButton saveButton, saveBinaryButton, loadButton, solveButton;
+    JButton saveButton, saveBinaryButton, loadButton, solveButton, generateButton;
     JFileChooser fileChooser = new JFileChooser();
     JCheckBox animuj, pokazOdwiedzone, zoom;
     File file;
@@ -121,7 +121,15 @@ public class Menu extends JPanel implements ActionListener {
         layout.getConstraints(solveButton).setY(Spring.constant(92));
         layout.getConstraints(solveButton).setX(Spring.constant(100));
 
-        fileChooser.setCurrentDirectory(new File(".\\src\\main\\resources"));
+        generateButton = new JButton();
+        generateButton.setText("Generuj");
+        generateButton.addActionListener(this);
+        this.add(generateButton);
+
+        layout.getConstraints(generateButton).setY(Spring.constant(156));
+        layout.getConstraints(generateButton).setX(Spring.constant(5));
+
+        fileChooser.setCurrentDirectory(new File(".\\files"));
 
     }
 
@@ -182,6 +190,7 @@ public class Menu extends JPanel implements ActionListener {
                     Main.labirynt = newLabirynt;
                     //frame.add(Main.labirynt);
                     frame.pack();
+                    frame.setLocationRelativeTo(null);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -190,14 +199,11 @@ public class Menu extends JPanel implements ActionListener {
             if(Main.labirynt == null || !Main.labirynt.created)
             {
                 JOptionPane.showMessageDialog(null, "Najpierw stwórz labirynt");
-                return;
             }
 
-            try {
-                Main.labirynt.searcher.Astar();
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
+        }
+        else if(e.getSource() == generateButton){
+            new GenerationWindow();
         }
         else if(e.getSource() == animuj)
         {

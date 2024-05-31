@@ -274,8 +274,11 @@ public class Labirynt extends JPanel{
             buffer.put((byte)(count-1));
             counter++;
         }
+        buffer.flip();
         buffer.putInt(29, counter);
-        output.write(buffer.array());
+        byte[] data = new byte[buffer.limit()];
+        buffer.get(data);
+        output.write(data);
         output.close();
     }
 

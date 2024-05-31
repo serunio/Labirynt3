@@ -9,5 +9,5 @@ Do rozwiązywania labiryntu używany jest algorytm A*.\
 Możliwe jest zapisanie labiryntu do formy tekstowej (ściana to X, przejście to spacja)\
 lub binarnej opisanej w pliku [opis pliku binarnego.pdf](https://github.com/serunio/Labirynt3/blob/master/opis%20pliku%20binarnego.pdf) (pierwsze dwie sekcje)
 
-Aby cały program działał poprawnie wymagana jest konfiguracja z folderu [App](https://github.com/serunio/Labirynt3/tree/master/app) (generator musi mieć nazwę "generator.exe", folder na labirynty musi mieć nazwę "files")
+Aby cały program działał poprawnie wymagana jest konfiguracja z folderu [app](https://github.com/serunio/Labirynt3/tree/master/app) (generator musi mieć nazwę "generator.exe", folder na labirynty musi mieć nazwę "files")
 

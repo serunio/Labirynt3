@@ -48,7 +48,7 @@ public class GenerationWindow extends JFrame {
 
             Runtime rt = Runtime.getRuntime();
             try {
-                rt.exec(new String[]{"cmd.exe","/c","generator.exe " + xValue + " " + yValue + " files\\" + nameValue});
+                rt.exec(new String[]{"generator.exe", xValue+"", yValue+"", "files\\" + nameValue});
             } catch (IOException e) {
                 e.printStackTrace();
             }
